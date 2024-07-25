@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: consumer
+  cloud:
+    openfeign:
+      client:
+        config:
+          employees-client:
+            readTimeout: 5000
+            connectTimeout: 5000
+
+server:
+  port: 8081

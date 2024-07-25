@@ -1,0 +1,17 @@
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Producer
+producer/.gradle/
+producer/build/
+
+# Consumer
+consumer/.gradle/
+consumer/build/
+
+# Shedlock
+shedlock/.gradle/
+shedlock/build/
+

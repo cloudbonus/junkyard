@@ -1,0 +1,64 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:16.3
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - pgdemo:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+    ports:
+      - $POSTGRES_LOCAL_PORT:$POSTGRES_DOCKER_PORT
+    networks:
+      - net
+
+  shedlock-node-one:
+    container_name: shedlock-node-one
+    depends_on:
+      - postgres
+    build:
+      context: shedlock
+      dockerfile: ./Dockerfile
+    restart: on-failure
+    env_file: .env
+    environment:
+      - SPRING_DATASOURCE_URL=$SHEDLOCK_DATASOURCE_URL
+      - SPRING_DATASOURCE_USERNAME=$POSTGRES_USER
+      - SPRING_DATASOURCE_PASSWORD=$POSTGRES_PASSWORD
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+      - SHEDLOCK_NODE_NUMBER=1
+    ports:
+      - $FIRST_NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+    networks:
+      - net
+
+  shedlock-node-two:
+    container_name: shedlock-node-two
+    depends_on:
+      - postgres
+    build:
+      context: shedlock
+      dockerfile: ./Dockerfile
+    restart: on-failure
+    env_file: .env
+    environment:
+      - SPRING_DATASOURCE_URL=$SHEDLOCK_DATASOURCE_URL
+      - SPRING_DATASOURCE_USERNAME=$POSTGRES_USER
+      - SPRING_DATASOURCE_PASSWORD=$POSTGRES_PASSWORD
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+      - SHEDLOCK_NODE_NUMBER=2
+    ports:
+      - $SECOND_NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+    networks:
+      - net
+
+volumes:
+  pgdemo:
+
+networks:
+  net:
+    name: net
+    driver: bridge
