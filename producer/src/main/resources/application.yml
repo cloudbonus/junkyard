@@ -30,3 +30,6 @@ application:
     core-pool-size: 10
     max-pool-size: 50
     queue-capacity: 10000
+
+demo-starter:
+  name: producer
