@@ -33,3 +33,9 @@ application:
 
 demo-starter:
   name: producer
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

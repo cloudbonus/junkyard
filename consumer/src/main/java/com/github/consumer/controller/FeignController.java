@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,7 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("feign")
 public class FeignController {
 
+    private static final Logger log = LoggerFactory.getLogger(FeignController.class);
     private final EmployeeClient employeeClient;
 
     @GetMapping
@@ -46,5 +49,15 @@ public class FeignController {
                     String body2 = Objects.requireNonNull(cp2.join().getBody()).toString();
                     return Map.of("object", body1 + " " + body2);
                 });
+    }
+
+    @GetMapping(headers = "X-API-VERSION=1")
+    public void logFirstVersionRequest() {
+        log.info("v1");
+    }
+
+    @GetMapping(headers = "X-API-VERSION=2")
+    public void logSecondVersionRequest() {
+        log.info("v2");
     }
 }

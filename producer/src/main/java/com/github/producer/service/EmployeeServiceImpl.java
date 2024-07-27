@@ -36,6 +36,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Async(AsyncConfiguration.TASK_EXECUTOR_SERVICE)
     public CompletableFuture<Optional<Employee>> findOneByName(String name) {
-        return employeeRepository.findOneByNameLike(name).thenApply(Optional::ofNullable);
+        return employeeRepository.findOneByName(name).thenApply(Optional::ofNullable);
     }
 }

@@ -23,5 +23,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     CompletableFuture<Employee> findOneById(Long id);
 
     @Async(AsyncConfiguration.TASK_EXECUTOR_REPOSITORY)
-    CompletableFuture<Employee> findOneByNameLike(String name);
+    CompletableFuture<Employee> findOneByName(String name);
 }

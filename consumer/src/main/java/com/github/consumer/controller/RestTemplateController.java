@@ -1,6 +1,10 @@
 package com.github.consumer.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
@@ -19,7 +24,9 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("rest-template")
 public class RestTemplateController {
 
+    private static final Logger log = LoggerFactory.getLogger(RestTemplateController.class);
     private final RestTemplate restTemplate;
+    private final MessageSource messageSource;
 
     @GetMapping
     public CompletableFuture<ResponseEntity<String>> findEmployeeById(@RequestParam Long value) {
@@ -28,6 +35,10 @@ public class RestTemplateController {
 
         CompletableFuture<ResponseEntity<?>> cp2 = CompletableFuture.supplyAsync(() ->
                 restTemplate.getForEntity(String.format("/id?value=%d", value + 1), String.class));
+
+        Locale locale = LocaleContextHolder.getLocale();
+
+        log.info(messageSource.getMessage("good.morning.message", null, "default message", locale));
 
         return CompletableFuture.allOf(cp1, cp2)
                 .thenApply(v -> {

@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -51,14 +54,16 @@ public class EmployeeController {
     }
 
     @GetMapping("name")
-    @SneakyThrows
     @Async(AsyncConfiguration.TASK_EXECUTOR_CONTROLLER)
     public CompletableFuture<ResponseEntity<?>> findEmployeeByName(@RequestParam String value) {
-        Thread.sleep(3000);
         return employeeService
                 .findOneByName(value)
-                .thenApply(mapMaybeEmployeeToResponse)
-                .exceptionally(handleFindEmployeeByNameFailure.apply(value));
+                .<ResponseEntity<?>>thenApply(maybeEmployee -> maybeEmployee.map(e -> {
+                            Link link = WebMvcLinkBuilder.linkTo(EmployeeController.class).withSelfRel();
+                            return ResponseEntity.ok(EntityModel.of(e).add(link.withRel("all-employees")));
+                        })
+                        .orElse(ResponseEntity.notFound().build()))
+                .exceptionally(ex -> ResponseEntity.internalServerError().build());
     }
 
     private static final Function<Throwable, ResponseEntity<?>> handleFindEmployeesFailure = throwable -> {
@@ -66,17 +71,12 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     };
 
-    private static final Function<Optional<Employee>, ResponseEntity<?>> mapMaybeEmployeeToResponse = maybeUser -> maybeUser
+    private static final Function<Optional<Employee>, ResponseEntity<?>> mapMaybeEmployeeToResponse = maybeEmployee -> maybeEmployee
             .<ResponseEntity<?>>map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
 
-    private static final Function<Long, Function<Throwable, ResponseEntity<?>>> handleFindEmployeeByIdFailure = userId -> throwable -> {
-        log.error(String.format("Unable to retrieve employee for id: %s", userId), throwable);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    };
-
-    private static final Function<String, Function<Throwable, ResponseEntity<?>>> handleFindEmployeeByNameFailure = name -> throwable -> {
-        log.error(String.format("Unable to retrieve employee with the name: %s", name), throwable);
+    private static final Function<Long, Function<Throwable, ResponseEntity<?>>> handleFindEmployeeByIdFailure = employeeId -> throwable -> {
+        log.error(String.format("Unable to retrieve employee for id: %s", employeeId), throwable);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     };
 }
