@@ -15,3 +15,10 @@ consumer/build/
 shedlock/.gradle/
 shedlock/build/
 
+# Proxy
+proxy/.gradle/
+proxy/build/
+
+# Hibernate
+hibernate-problem/.gradle/
+hibernate-problem/build/
