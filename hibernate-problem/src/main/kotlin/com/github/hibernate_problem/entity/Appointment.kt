@@ -14,7 +14,7 @@ class Appointment(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
+    //@ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne
     val doctor: Doctor
-) {
-}
+)

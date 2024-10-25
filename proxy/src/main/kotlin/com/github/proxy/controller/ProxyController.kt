@@ -11,5 +11,5 @@ import org.springframework.web.bind.annotation.RestController
 class ProxyController(val proxyBeanTwo: ProxyBeanTwo) {
 
     @GetMapping
-    fun sendSignal() = proxyBeanTwo.invokeMethodWithTransaction()
+    fun sendSignal() = proxyBeanTwo.invokeMethodWithoutTransaction()
 }

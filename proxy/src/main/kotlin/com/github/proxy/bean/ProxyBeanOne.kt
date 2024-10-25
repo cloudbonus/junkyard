@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
  * @author Raman Haurylau
  */
 @Service
-class ProxyBeanOne(var counter: Int = 0, private val userRepository: UserRepository) {
+class ProxyBeanOne(var counter: Int, private val userRepository: UserRepository) {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
@@ -22,15 +22,16 @@ class ProxyBeanOne(var counter: Int = 0, private val userRepository: UserReposit
     @Transactional
     fun invokeMethodWithTransaction(person: Person) {
         userRepository.save(person)
-        log.info("{}", counter++)
+        counter++
+        log.info("{}", counter)
     }
 
     @Transactional
-    fun invokeMethodWithTransactionButStandalone(): Int {
+    fun invokeMethodWithTransactionButStandalone() {
         val person = Person()
         userRepository.save(person)
         log.info("{}", this.javaClass)
-        log.info("{}", counter++)
-        return counter
+        counter++
+        log.info("{}", counter)
     }
 }

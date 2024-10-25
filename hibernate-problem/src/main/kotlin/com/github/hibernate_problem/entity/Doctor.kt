@@ -16,8 +16,13 @@ class Doctor(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
     val name: String,
+    //@OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @OneToMany(mappedBy = "doctor", cascade = [CascadeType.ALL])
+    //@Fetch(FetchMode.SUBSELECT)
+    //@Fetch(FetchMode.JOIN)
     val patiens: Set<Patient>,
+    //@Fetch(FetchMode.SUBSELECT)
+    //@Fetch(FetchMode.JOIN)
     @OneToMany(mappedBy = "doctor", cascade = [CascadeType.ALL])
     val appointments: Set<Appointment>,
 )

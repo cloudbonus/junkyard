@@ -15,6 +15,7 @@ class Patient(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
     val name: String,
+    //@ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne
     val doctor: Doctor
 )
