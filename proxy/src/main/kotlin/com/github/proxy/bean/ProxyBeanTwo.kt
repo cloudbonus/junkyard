@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
  * @author Raman Haurylau
  */
 @Service
-class ProxyBeanTwo(val proxyBeanOne: ProxyBeanOne) {
+class ProxyBeanTwo(val proxyBeanOne: ProxyBean) {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 

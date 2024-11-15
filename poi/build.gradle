@@ -1,0 +1,27 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.5'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.github'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compileOnly 'org.projectlombok:lombok:1.18.34'
+	annotationProcessor 'org.projectlombok:lombok:1.18.34'
+	implementation 'fr.opensagres.xdocreport:fr.opensagres.poi.xwpf.converter.pdf:2.1.0'
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.3.5'
+	implementation 'org.apache.poi:poi-ooxml:5.3.0'
+	implementation 'org.springframework.boot:spring-boot-starter'
+}

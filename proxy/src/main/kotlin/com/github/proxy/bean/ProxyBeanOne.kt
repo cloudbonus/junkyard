@@ -10,24 +10,25 @@ import org.springframework.transaction.annotation.Transactional
  * @author Raman Haurylau
  */
 @Service
-class ProxyBeanOne(var counter: Int, private val userRepository: UserRepository) {
+class ProxyBeanOne(private val userRepository: UserRepository) : ProxyBean {
+    override var counter: Int = 0
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    fun invokeMethodWithoutTransaction() {
+    override fun invokeMethodWithoutTransaction() {
         val person = Person()
         invokeMethodWithTransaction(person)
     }
 
     @Transactional
-    fun invokeMethodWithTransaction(person: Person) {
+    override fun invokeMethodWithTransaction(person: Person) {
         userRepository.save(person)
         counter++
         log.info("{}", counter)
     }
 
     @Transactional
-    fun invokeMethodWithTransactionButStandalone() {
+    override fun invokeMethodWithTransactionButStandalone() {
         val person = Person()
         userRepository.save(person)
         log.info("{}", this.javaClass)

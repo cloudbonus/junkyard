@@ -12,4 +12,5 @@ class ProxyController(val proxyBeanTwo: ProxyBeanTwo) {
 
     @GetMapping
     fun sendSignal() = proxyBeanTwo.invokeMethodWithoutTransaction()
+
 }
